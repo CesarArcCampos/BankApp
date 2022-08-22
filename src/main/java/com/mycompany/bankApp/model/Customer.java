@@ -33,6 +33,12 @@ public class Customer {
     @Column(nullable = false, length = 9, unique = true)
     private long NIF;
 
+    @Column(nullable = false, length = 45)
+    private String username;
+
+    @Column(nullable = false, length = 45, unique = true)
+    private String password;
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
