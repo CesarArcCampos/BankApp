@@ -30,5 +30,6 @@ public class Account {
     private Date updateDate;
 
     @ManyToOne
+    @JoinColumn(name = "Customer_id")
     private Customer customer;
 }
