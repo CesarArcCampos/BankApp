@@ -6,9 +6,13 @@ import com.mycompany.bankApp.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.Map;
 
 @Controller
 public class MainController {
@@ -19,6 +23,11 @@ public class MainController {
     @GetMapping("/login")
     public String login() {
         return "index";
+    }
+
+    @GetMapping("/loginError")
+    public String loginError() {
+        return "indexError";
     }
 
     @GetMapping("/customer/new")
@@ -39,18 +48,22 @@ public class MainController {
     }
 
     @PostMapping("/login")
-    public String submitLogin(String username, String password) {
+    public String submitLogin(String username, String password, Model model) {
 
         Customer customerByUsername = null;
         try {
             customerByUsername = customerService.getCustomerByUsername(username);
         } catch (UserNotFoundException exception) {
-            return "redirect:/login";
+            String errorMessage = "Invalid Username";
+            model.addAttribute("errorMessage", errorMessage);
+            return "indexError";
         }
         if (password.equals(customerByUsername.getPassword())) {
             return "redirect:/customer/page";
         } else {
-            return "redirect:/login";
+            String errorMessage = "Invalid Password";
+            model.addAttribute("errorMessage", errorMessage);
+            return "indexError";
         }
     }
 }
