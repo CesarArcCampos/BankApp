@@ -13,12 +13,12 @@
 </div>
 <p>&nbsp;</p>
 <div class="container-fluid text-center">
-    <form th:action="@{/login.html}" method="post" style="max-width: 350px; margin: 0 auto;">
+    <form th:action="@{/login}" method="post" style="max-width: 350px; margin: 0 auto;">
         <div  class="border border-secondary p-3 rounded">
             <p> <input type="text" name="username" class="form-control" placeholder="Username" required/> </p>
             <p> <input type="password" name="password" class="form-control" placeholder="Password" required/> </p>
             <p> <input type="submit" value="Login" class="btn btn-primary"/> </p>
-            <p> <a href="url">Create a user account</a> </p>
+            <p> <a th:href="@{/customer/new}">Create a user account</a> </p>
         </div>
     </form>
 </div>
