@@ -27,6 +27,15 @@ public class CustomerService {
         throw new UserNotFoundException("It was not possible to find a Customer with id: " + id);
     }
 
+    public Customer getCustomerByUsername(String username) throws UserNotFoundException {
+        Customer customer = customerRepo.findByUsername(username);
+
+        if(customer != null) {
+            return customer;
+        }
+        throw new UserNotFoundException("Invalid Username");
+    }
+
     public void deleteCustomer(Long id) throws UserNotFoundException {
         Optional<Customer> customer = customerRepo.findById(id);
 
