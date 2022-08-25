@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create new Customer</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous" />
+</head>
+<body>
+<div align="center">
+    <h1>Create new Account</h1>
+</div>
+<p>&nbsp;</p>
+<div class="container-fluid text-center">
+    <form th:action="@{'/account/' + ${customerID}}" th:object="${account}" method="post" style="max-width: 350px; margin: 0 auto;">
+        <div  class="border border-secondary p-3 rounded">
+            <p> <input type="number" th:field="*{amount}" class="form-control" placeholder="Amount" required/> </p>
+            <p> <input type="submit" value="Save" class="btn btn-primary"/> </p>
+        </div>
+    </form>
+
+</div>
+</body>
+</html>

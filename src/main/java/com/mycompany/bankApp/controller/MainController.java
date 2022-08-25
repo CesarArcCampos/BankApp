@@ -1,24 +1,24 @@
 package com.mycompany.bankApp.controller;
 
 import com.mycompany.bankApp.exceptions.UserNotFoundException;
+import com.mycompany.bankApp.model.Account;
 import com.mycompany.bankApp.model.Customer;
+import com.mycompany.bankApp.service.AccountService;
 import com.mycompany.bankApp.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 
 @Controller
 public class MainController {
 
     @Autowired
     CustomerService customerService;
+
+    @Autowired
+    AccountService accountService;
 
     @GetMapping("/login")
     public String login() {
@@ -36,8 +36,13 @@ public class MainController {
         return "customer-form";
     }
 
-    @GetMapping("/customer/page")
-    public String customerPage() {
+    @GetMapping("/customer/page/{id}")
+    public String customerPage(@PathVariable("id") Long id, Model model) throws UserNotFoundException {
+        Customer customer = customerService.getCustomerByID(id);
+        String message = "Welcome " + customer.getFirstname() + ".";
+        model.addAttribute("message", message);
+        String customerID = id.toString();
+        model.addAttribute("customerID", customerID);
         return "customerPage";
     }
 
@@ -51,6 +56,7 @@ public class MainController {
     public String submitLogin(String username, String password, Model model) {
 
         Customer customerByUsername = null;
+
         try {
             customerByUsername = customerService.getCustomerByUsername(username);
         } catch (UserNotFoundException exception) {
@@ -59,11 +65,30 @@ public class MainController {
             return "indexError";
         }
         if (password.equals(customerByUsername.getPassword())) {
-            return "redirect:/customer/page";
+            return "redirect:/customer/page/" + customerByUsername.getId();
         } else {
             String errorMessage = "Invalid Password";
             model.addAttribute("errorMessage", errorMessage);
             return "indexError";
         }
+    }
+
+    @GetMapping("/accountForm/{customerID}")
+    public String showAccountForm(Model model, @PathVariable("customerID") Long id ) {
+        model.addAttribute("account", new Account());
+
+        String customerID = id.toString();
+        model.addAttribute("customerID", customerID);
+
+        return "account-form";
+    }
+
+    @PostMapping("/account/{customerID}")
+    public String saveNewAccount(Account account, @PathVariable("customerID") Long id) throws UserNotFoundException {
+        Customer customer = customerService.getCustomerByID(id);
+        account.setCustomer(customer);
+        accountService.createNewAccount(account);
+
+        return "redirect:/customer/page/" + id;
     }
 }

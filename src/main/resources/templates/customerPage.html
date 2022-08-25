@@ -9,18 +9,17 @@
 </head>
 <body>
 <div align="center">
-    <h1>HELLO</h1>
+    <p>&nbsp;</p>
+    <h3 th:text="${message}"></h3>
 </div>
 <p>&nbsp;</p>
 <div class="container-fluid text-center">
-    <form th:action="@{/login}" method="post" style="max-width: 350px; margin: 0 auto;">
-        <div  class="border border-secondary p-3 rounded">
-            <p> <input type="text" name="username" class="form-control" placeholder="Username" required/> </p>
-            <p> <input type="password" name="password" class="form-control" placeholder="Password" required/> </p>
-            <p> <input type="submit" value="Login" class="btn btn-primary"/> </p>
-            <p> <a th:href="@{/customer/new}">Create a user account</a> </p>
-        </div>
-    </form>
+    <div  class="border border-secondary p-3 rounded" style="max-width: 350px; margin: 0 auto;">
+        <p th:text="${customerID}">>  </p>
+        <p> <a class="h4" th:href="@{'/accountForm/' + ${customerID}}">Create Bank Account</a> </p>
+        <p> <a class="h4" th:href="@{/users}">Check Accounts</a> </p>
+        <p> <a class="h4" th:href="@{/users}">Edit User Account</a> </p>
+    </div>
 </div>
 </body>
 </html>
