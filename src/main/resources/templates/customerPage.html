@@ -17,7 +17,7 @@
     <div  class="border border-secondary p-3 rounded" style="max-width: 350px; margin: 0 auto;">
         <p th:text="${customerID}">>  </p>
         <p> <a class="h4" th:href="@{'/accountForm/' + ${customerID}}">Create Bank Account</a> </p>
-        <p> <a class="h4" th:href="@{/users}">Check Accounts</a> </p>
+        <p> <a class="h4" th:href="@{'/checkAccounts/' + ${customerID}}">Check Accounts</a> </p>
         <p> <a class="h4" th:href="@{/users}">Edit User Account</a> </p>
     </div>
 </div>

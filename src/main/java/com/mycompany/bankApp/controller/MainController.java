@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @Controller
 public class MainController {
@@ -43,6 +45,11 @@ public class MainController {
         model.addAttribute("message", message);
         String customerID = id.toString();
         model.addAttribute("customerID", customerID);
+        return "customerPage";
+    }
+
+    @PostMapping("/customer/page/{id}")
+    public String customerPage() {
         return "customerPage";
     }
 
@@ -90,5 +97,15 @@ public class MainController {
         accountService.createNewAccount(account);
 
         return "redirect:/customer/page/" + id;
+    }
+
+    @GetMapping("/checkAccounts/{customerID}")
+    public String checkAccountsList(@PathVariable("customerID") Long id, Model model) {
+
+        List<Account> accounts = accountService.getListAccounts(id);
+        model.addAttribute("accounts", accounts);
+        model.addAttribute("customerID", id);
+
+        return "accountList";
     }
 }

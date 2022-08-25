@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>List Accounts</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous" />
+</head>
+<body>
+<div align="center">
+    <h1>List of Accounts</h1>
+</div>
+<p>&nbsp;</p>
+<div class="container-fluid text-center">
+    <div>
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+            <tr>
+                <th> Account Number </th>
+                <th> Amount </th>
+                <th> Date </th>
+                <th> Update </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${accounts.empty}">
+                <td> No accounts available</td>
+            </tr>
+            <tr th:each="account : ${accounts}">
+                <td> <span th:text="${account.id}"> Number </span></td>
+                <td> <span th:text="${account.amount}"> Amount </span></td>
+                <td> <span th:text="${#dates.format(account.createDate, 'dd-MM-yyyy HH:mm')}"> Date </span></td>
+                <td> <span th:text="${#dates.format(account.updateDate, 'dd-MM-yyyy HH:mm')}"> Update </span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <a th:href="@{'/customer/page/' + ${customerID}}">Return to previous page</a>
+    </div>
+</div>
+</body>
+</html>
