@@ -165,4 +165,21 @@ public class MainController {
 
         return "redirect:/checkAccounts/" + customerID;
     }
+
+    @GetMapping("/account/transfer/{customerID}/{accountID}")
+    public String showTransferPage(@PathVariable("accountID") Long id, @PathVariable("customerID") Long customerID, Model model) throws UserNotFoundException {
+        Account account = accountService.getAccountByID(id);
+        model.addAttribute("account", account);
+        model.addAttribute("customerID", customerID);
+        return "transfer-form";
+    }
+
+    @PostMapping("/account/transfer/{customerID}/{accountID}")
+    public String transferToAccount(@PathVariable("accountID") Long idOrigin, @PathVariable("customerID") Long customerID, Model model, Integer amount, Long id) throws UserNotFoundException {
+
+        accountService.transferToAccount(amount, idOrigin, id);
+        model.addAttribute("customerID", customerID);
+
+        return "redirect:/checkAccounts/" + customerID;
+    }
 }

@@ -54,4 +54,9 @@ public class AccountService {
         account.setAmount(finalAmount);
         accountRepo.save(account);
     }
+
+    public void transferToAccount(Integer amountToTransfer, Long idOrigin, Long idTarget) throws UserNotFoundException {
+        withdrawFromAccount(amountToTransfer, idOrigin);
+        depositToAccount(amountToTransfer, idTarget);
+    }
 }

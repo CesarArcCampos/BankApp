@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Transfer Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous" />
+</head>
+<body>
+<div align="center" class="mt-5">
+    <h1>Transfer</h1>
+</div>
+<p>&nbsp;</p>
+<div class="container-fluid text-center">
+    <form th:action="@{'/account/transfer/' + ${customerID} + '/' + ${accountID}}" th:object="${account}" method="post" style="max-width: 350px; margin: 0 auto;">
+        <div  class="border border-secondary p-3 rounded">
+            <p> <input type="number" min="0" th:field="*{id}" class="form-control" placeholder="Account id" required/> </p>
+            <p> <input type="number" min="0" th:field="*{amount}" class="form-control" placeholder="Amount to Withdraw" required/> </p>
+            <p> <input type="submit" value="Transfer" class="btn btn-primary"/> </p>
+        </div>
+    </form>
+    <div class="h6 mt-4" >
+        <a th:href="@{'/checkAccounts/' + ${customerID}}">Return to previous page</a>
+    </div>
+
+</div>
+</body>
+</html>
