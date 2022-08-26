@@ -21,6 +21,7 @@
                 <th> Amount </th>
                 <th> Date </th>
                 <th> Update </th>
+                <th> Action </th>
             </tr>
             </thead>
             <tbody>
@@ -32,11 +33,13 @@
                 <td> <span th:text="${account.amount}"> Amount </span></td>
                 <td> <span th:text="${#dates.format(account.createDate, 'dd-MM-yyyy HH:mm')}"> Date </span></td>
                 <td> <span th:text="${#dates.format(account.updateDate, 'dd-MM-yyyy HH:mm')}"> Update </span></td>
+                <td>
+                    <a class="h6 mr-3" th:href="@{'/account/withdraw/' + ${customerID} + '/' + ${account.id}}">Withdraw</a>
+                </td>
             </tr>
             </tbody>
         </table>
     </div>
-
     <div>
         <a th:href="@{'/customer/page/' + ${customerID}}">Return to previous page</a>
     </div>

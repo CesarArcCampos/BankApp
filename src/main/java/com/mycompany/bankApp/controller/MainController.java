@@ -131,4 +131,21 @@ public class MainController {
         flag = false;
         return "customer-form";
     }
+
+    @GetMapping("/account/withdraw/{customerID}/{accountID}")
+    public String showWithdrawPage(@PathVariable("accountID") Long id, @PathVariable("customerID") Long customerID, Model model) throws UserNotFoundException {
+        Account account = accountService.getAccountByID(id);
+        model.addAttribute("account", account);
+        model.addAttribute("customerID", customerID);
+        return "withdraw-form";
+    }
+
+    @PostMapping("/account/withdraw/{customerID}/{accountID}")
+    public String withdrawFromAccount(@PathVariable("accountID") Long id, @PathVariable("customerID") Long customerID, Model model, Integer amount) throws UserNotFoundException {
+
+        accountService.withdrawFromAccount(amount, id);
+        model.addAttribute("customerID", customerID);
+
+        return "redirect:/checkAccounts/" + customerID;
+    }
 }
