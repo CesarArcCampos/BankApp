@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -21,6 +22,9 @@ public class MainController {
 
     @Autowired
     AccountService accountService;
+
+    public boolean flag = true;
+    public Date createDate;
 
     @GetMapping("/login")
     public String login() {
@@ -55,8 +59,18 @@ public class MainController {
 
     @PostMapping("/customer/save")
     public String saveNewCustomer(Customer customer) {
-        customerService.createNewCustomer(customer);
-        return "redirect:/login";
+
+        if(flag) {
+            customerService.createNewCustomer(customer);
+            return "redirect:/login";
+        } else {
+            flag = false;
+            customer.setCreateDate(createDate);
+            customerService.createNewCustomer(customer);
+            long customerId = customer.getId();
+            return "redirect:/customer/page/" + customerId;
+        }
+
     }
 
     @PostMapping("/login")
@@ -107,5 +121,14 @@ public class MainController {
         model.addAttribute("customerID", id);
 
         return "accountList";
+    }
+
+    @GetMapping("/customer/edit/{customerID}")
+    public String showEditCustomerPage(@PathVariable("customerID") Long id, Model model) throws UserNotFoundException {
+        Customer customer = customerService.getCustomerByID(id);
+        model.addAttribute("customer", customer);
+        createDate = customer.getCreateDate();
+        flag = false;
+        return "customer-form";
     }
 }
