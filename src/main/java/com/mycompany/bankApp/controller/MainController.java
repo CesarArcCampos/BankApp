@@ -3,8 +3,10 @@ package com.mycompany.bankApp.controller;
 import com.mycompany.bankApp.exceptions.UserNotFoundException;
 import com.mycompany.bankApp.model.Account;
 import com.mycompany.bankApp.model.Customer;
+import com.mycompany.bankApp.model.Log;
 import com.mycompany.bankApp.service.AccountService;
 import com.mycompany.bankApp.service.CustomerService;
+import com.mycompany.bankApp.service.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +24,9 @@ public class MainController {
 
     @Autowired
     AccountService accountService;
+
+    @Autowired
+    LogService logService;
 
     public boolean flag = true;
     public Date createDate;
@@ -110,6 +115,10 @@ public class MainController {
         account.setCustomer(customer);
         accountService.createNewAccount(account);
 
+        int amount = account.getAmount();
+
+        logService.newLog("Create Account", amount, new Log(), account);
+
         return "redirect:/customer/page/" + id;
     }
 
@@ -137,6 +146,7 @@ public class MainController {
         Account account = accountService.getAccountByID(id);
         model.addAttribute("account", account);
         model.addAttribute("customerID", customerID);
+
         return "withdraw-form";
     }
 
@@ -145,6 +155,9 @@ public class MainController {
 
         accountService.withdrawFromAccount(amount, id);
         model.addAttribute("customerID", customerID);
+
+        Account account = accountService.getAccountByID(id);
+        logService.newLog("Withdraw", - amount, new Log(), account);
 
         return "redirect:/checkAccounts/" + customerID;
     }
@@ -163,6 +176,9 @@ public class MainController {
         accountService.depositToAccount(amount, id);
         model.addAttribute("customerID", customerID);
 
+        Account account = accountService.getAccountByID(id);
+        logService.newLog("Deposit", amount, new Log(), account);
+
         return "redirect:/checkAccounts/" + customerID;
     }
 
@@ -171,6 +187,7 @@ public class MainController {
         Account account = accountService.getAccountByID(id);
         model.addAttribute("account", account);
         model.addAttribute("customerID", customerID);
+
         return "transfer-form";
     }
 
@@ -180,6 +197,26 @@ public class MainController {
         accountService.transferToAccount(amount, idOrigin, id);
         model.addAttribute("customerID", customerID);
 
+        Account account = accountService.getAccountByID(idOrigin);
+        logService.newLog("Transfer", - amount, new Log(), account);
+
+        Account accountTarget = accountService.getAccountByID(id);
+        logService.newLog("Transfer", amount, new Log(), accountTarget);
+
         return "redirect:/checkAccounts/" + customerID;
+    }
+
+    @GetMapping("/account/logs/{customerID}/{accountID}")
+    public String showLogsPage(@PathVariable("accountID") Long id, @PathVariable("customerID") Long customerID, Model model) throws UserNotFoundException {
+        List<Log> logs = logService.getLogsByAccountId(id);
+        model.addAttribute("logs", logs);
+
+        int balance = accountService.getAccountByID(id).getAmount();
+        String message = "Balance: " + balance;
+
+        model.addAttribute("message", message);
+
+        model.addAttribute("customerID", customerID);
+        return "logs";
     }
 }
