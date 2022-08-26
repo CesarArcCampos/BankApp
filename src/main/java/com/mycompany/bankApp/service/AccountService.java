@@ -43,12 +43,15 @@ public class AccountService {
         account = getAccountByID(id);
         int amount = account.getAmount();
         int finalAmount = amount - amountToWithdraw;
-
-        if(finalAmount >= 0) {
-            account.setAmount(finalAmount);
-            accountRepo.save(account);
-        }
+        account.setAmount(finalAmount);
+        accountRepo.save(account);
     }
 
-
+    public void depositToAccount(Integer amountToDeposit, Long id) throws UserNotFoundException {
+        account = getAccountByID(id);
+        int amount = account.getAmount();
+        int finalAmount = amount + amountToDeposit;
+        account.setAmount(finalAmount);
+        accountRepo.save(account);
+    }
 }

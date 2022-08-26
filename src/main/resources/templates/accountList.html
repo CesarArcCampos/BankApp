@@ -35,6 +35,7 @@
                 <td> <span th:text="${#dates.format(account.updateDate, 'dd-MM-yyyy HH:mm')}"> Update </span></td>
                 <td>
                     <a class="h6 mr-3" th:href="@{'/account/withdraw/' + ${customerID} + '/' + ${account.id}}">Withdraw</a>
+                    <a class="h6 mr-3" th:href="@{'/account/deposit/' + ${customerID} + '/' + ${account.id}}">Deposit</a>
                 </td>
             </tr>
             </tbody>

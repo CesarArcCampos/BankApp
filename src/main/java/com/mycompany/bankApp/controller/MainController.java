@@ -148,4 +148,21 @@ public class MainController {
 
         return "redirect:/checkAccounts/" + customerID;
     }
+
+    @GetMapping("/account/deposit/{customerID}/{accountID}")
+    public String showDepositPage(@PathVariable("accountID") Long id, @PathVariable("customerID") Long customerID, Model model) throws UserNotFoundException {
+        Account account = accountService.getAccountByID(id);
+        model.addAttribute("account", account);
+        model.addAttribute("customerID", customerID);
+        return "deposit-form";
+    }
+
+    @PostMapping("/account/deposit/{customerID}/{accountID}")
+    public String depositToAccount(@PathVariable("accountID") Long id, @PathVariable("customerID") Long customerID, Model model, Integer amount) throws UserNotFoundException {
+
+        accountService.depositToAccount(amount, id);
+        model.addAttribute("customerID", customerID);
+
+        return "redirect:/checkAccounts/" + customerID;
+    }
 }
