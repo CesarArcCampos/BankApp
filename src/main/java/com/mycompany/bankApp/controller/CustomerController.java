@@ -4,6 +4,7 @@ import com.mycompany.bankApp.exceptions.UserNotFoundException;
 import com.mycompany.bankApp.model.Customer;
 import com.mycompany.bankApp.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,9 +47,14 @@ public class CustomerController {
     public String saveNewCustomer(Customer customer) {
 
         if(flag) {
+
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            String passwordEncoded = encoder.encode(customer.getPassword());
+            customer.setPassword(passwordEncoded);
             customerService.createNewCustomer(customer);
             return "redirect:/login";
         } else {
+
             flag = false;
             customer.setCreateDate(createDate);
             customerService.createNewCustomer(customer);
