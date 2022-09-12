@@ -32,19 +32,6 @@ public class CustomerController {
 
     @GetMapping("/customer/page/{id}")
     public String customerPage(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) throws UserNotFoundException {
-        //Customer customer = customerService.getCustomerByID(id);
-        //String message = "Welcome " + customer.getFirstname() + ".";
-        //model.addAttribute("message", message);
-        //String customerID = id.toString();
-        //model.addAttribute("customerID", customerID);
-
-        System.out.println("*********************************");
-        System.out.println("Entrou");
-        System.out.println("*********************************");
-
-        //Customer customer = userDetails.getCustomer();
-        //String customerID = String.valueOf(customer.getId());
-        //model.addAttribute("customerID", customerID);
 
         return "customerPage";
     }
