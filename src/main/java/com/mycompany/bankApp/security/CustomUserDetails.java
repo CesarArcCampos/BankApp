@@ -48,4 +48,14 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public String getFullName() {
+        String firstName = customer.getFirstname();
+        String lastName = customer.getLastname();
+        return "Welcome " + firstName + " " + lastName;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
 }

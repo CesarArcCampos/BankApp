@@ -2,8 +2,10 @@ package com.mycompany.bankApp.controller;
 
 import com.mycompany.bankApp.exceptions.UserNotFoundException;
 import com.mycompany.bankApp.model.Customer;
+import com.mycompany.bankApp.security.CustomUserDetails;
 import com.mycompany.bankApp.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,12 +31,21 @@ public class CustomerController {
     }
 
     @GetMapping("/customer/page/{id}")
-    public String customerPage(@PathVariable("id") Long id, Model model) throws UserNotFoundException {
-        Customer customer = customerService.getCustomerByID(id);
-        String message = "Welcome " + customer.getFirstname() + ".";
-        model.addAttribute("message", message);
-        String customerID = id.toString();
-        model.addAttribute("customerID", customerID);
+    public String customerPage(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) throws UserNotFoundException {
+        //Customer customer = customerService.getCustomerByID(id);
+        //String message = "Welcome " + customer.getFirstname() + ".";
+        //model.addAttribute("message", message);
+        //String customerID = id.toString();
+        //model.addAttribute("customerID", customerID);
+
+        System.out.println("*********************************");
+        System.out.println("Entrou");
+        System.out.println("*********************************");
+
+        //Customer customer = userDetails.getCustomer();
+        //String customerID = String.valueOf(customer.getId());
+        //model.addAttribute("customerID", customerID);
+
         return "customerPage";
     }
 
@@ -56,6 +67,9 @@ public class CustomerController {
         } else {
 
             flag = false;
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            String passwordEncoded = encoder.encode(customer.getPassword());
+            customer.setPassword(passwordEncoded);
             customer.setCreateDate(createDate);
             customerService.createNewCustomer(customer);
             long customerId = customer.getId();
@@ -63,9 +77,9 @@ public class CustomerController {
         }
     }
 
-    @GetMapping("/customer/edit/{customerID}")
-    public String showEditCustomerPage(@PathVariable("customerID") Long id, Model model) throws UserNotFoundException {
-        Customer customer = customerService.getCustomerByID(id);
+    @GetMapping("/customer/edit/")
+    public String showEditCustomerPage(@AuthenticationPrincipal CustomUserDetails user, Model model) throws UserNotFoundException {
+        Customer customer = user.getCustomer();
         model.addAttribute("customer", customer);
         createDate = customer.getCreateDate();
         flag = false;

@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
 <head>
     <meta charset="UTF-8">
     <title>Login Page</title>
@@ -11,14 +13,21 @@
 <div align="center">
     <p>&nbsp;</p>
     <h3 th:text="${message}"></h3>
+    <div>
+        <form th:action="@{/logout}" method="post">
+            <p sec:authentication="principal.fullName"></p>
+            <input type="submit" value="Sign Out" />
+        </form>
+    </div>
+
 </div>
 <p>&nbsp;</p>
 <div class="container-fluid text-center">
     <div  class="border border-secondary p-3 rounded" style="max-width: 350px; margin: 0 auto;">
         <p th:text="${customerID}">>  </p>
-        <p> <a class="h4" th:href="@{'/accountForm/' + ${customerID}}">Create Bank Account</a> </p>
-        <p> <a class="h4" th:href="@{'/checkAccounts/' + ${customerID}}">Check Accounts</a> </p>
-        <p> <a class="h4" th:href="@{'/customer/edit/' + ${customerID}}">Edit User Account</a> </p>
+        <p> <a class="h4" th:href="@{'/accountForm/'}">Create Bank Account</a> </p>
+        <p> <a class="h4" th:href="@{'/checkAccounts/'}">Check Accounts</a> </p>
+        <p> <a class="h4" th:href="@{'/customer/edit/'}">Edit User Account</a> </p>
     </div>
 </div>
 </body>

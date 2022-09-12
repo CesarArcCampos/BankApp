@@ -4,10 +4,12 @@ import com.mycompany.bankApp.exceptions.UserNotFoundException;
 import com.mycompany.bankApp.model.Account;
 import com.mycompany.bankApp.model.Customer;
 import com.mycompany.bankApp.model.Log;
+import com.mycompany.bankApp.security.CustomUserDetails;
 import com.mycompany.bankApp.service.AccountService;
 import com.mycompany.bankApp.service.CustomerService;
 import com.mycompany.bankApp.service.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,8 +43,11 @@ public class AccountController {
         return "redirect:/customer/page/" + id;
     }
 
-    @GetMapping("/checkAccounts/{customerID}")
-    public String checkAccountsList(@PathVariable("customerID") Long id, Model model) {
+    @GetMapping("/checkAccounts")
+    public String checkAccountsList(@AuthenticationPrincipal CustomUserDetails user, Model model) {
+
+        Customer customer = user.getCustomer();
+        Long id = customer.getId();
 
         List<Account> accounts = accountService.getListAccounts(id);
         model.addAttribute("accounts", accounts);
@@ -69,7 +74,7 @@ public class AccountController {
         Account account = accountService.getAccountByID(id);
         logService.newLog("Withdraw", - amount, new Log(), account);
 
-        return "redirect:/checkAccounts/" + customerID;
+        return "redirect:/checkAccounts/";
     }
 
     @GetMapping("/account/deposit/{customerID}/{accountID}")
@@ -89,7 +94,7 @@ public class AccountController {
         Account account = accountService.getAccountByID(id);
         logService.newLog("Deposit", amount, new Log(), account);
 
-        return "redirect:/checkAccounts/" + customerID;
+        return "redirect:/checkAccounts/";
     }
 
     @GetMapping("/account/transfer/{customerID}/{accountID}")
@@ -113,7 +118,7 @@ public class AccountController {
         Account accountTarget = accountService.getAccountByID(id);
         logService.newLog("Transfer", amount, new Log(), accountTarget);
 
-        return "redirect:/checkAccounts/" + customerID;
+        return "redirect:/checkAccounts/";
     }
 
     @GetMapping("/account/logs/{customerID}/{accountID}")
@@ -130,11 +135,13 @@ public class AccountController {
         return "logs";
     }
 
-    @GetMapping("/accountForm/{customerID}")
-    public String showAccountForm(Model model, @PathVariable("customerID") Long id ) {
+    @GetMapping("/accountForm/")
+    public String showAccountForm(Model model, @AuthenticationPrincipal CustomUserDetails user) {
         model.addAttribute("account", new Account());
 
-        String customerID = id.toString();
+        Customer customer = user.getCustomer();
+        String customerID = String.valueOf(customer.getId());
+
         model.addAttribute("customerID", customerID);
 
         return "account-form";
